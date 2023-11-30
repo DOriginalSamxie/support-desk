@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import authService from './authService'
 
 //Get user from localstorage
@@ -41,8 +41,11 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
 })
 
 // Logout user
-export const logout = createAsyncThunk('aut/logout', async () => {
+export const logout = createAction('auth/logout', () => {
   authService.logout()
+  // return an empty object as our payload as we don't need a payload but the
+  // prepare function requires a payload return
+  return {}
 })
 export const authSlice = createSlice({
   name: 'auth',
@@ -53,6 +56,9 @@ export const authSlice = createSlice({
       state.isError = false
       state.isSuccess = false
       state.message = ''
+    },
+    logout: (state) => {
+      state.user = null
     },
   },
   extraReducers: (builder) => {
@@ -86,7 +92,6 @@ export const authSlice = createSlice({
         state.message = action.payload
         state.user = null
       })
-      .addCase(logout.fulfilled, (state) => (state.user = null))
   },
 })
 export const { reset } = authSlice.actions

@@ -21,14 +21,13 @@ function Login() {
     (state) => state.auth
   )
   useEffect(() => {
-    if (isError) {
+    if (isSuccess || user) {
+      toast.success('Registration successful')
+      navigate('/')
+      dispatch(reset())
+    } else if (isError) {
       toast.error(message)
 
-      //Redirect when logged in
-      if (isSuccess || user) {
-        toast.success('Registration successful')
-        navigate('/')
-      }
       dispatch(reset())
     }
   }, [isError, isSuccess, user, message, navigate, dispatch])
